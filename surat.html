@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Persetujuan Keluarga · PGNet</title>
+<meta name="theme-color" content="#188038">
+<link rel="icon" href="logo.png">
+<style>
+:root{--g:#188038;--gd:#0f5c27;--bg:#eef1ef;--card:#fff;--line:#d9dfdb;--muted:#5d6862;--fg:#1d2420;--soft:#e8ece9;--gs:#e6f4ea;--warn:#8a5a00;--warnbg:#fff4d6;--bad:#b42318;--badbg:#fdecea;--f:-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+@media (prefers-color-scheme:dark){:root{--g:#34a853;--gd:#81c995;--bg:#121614;--card:#1c231f;--line:#334039;--muted:#a3ada7;--fg:#e8eee9;--soft:#27302b;--gs:#1f3326;--warn:#f2c46b;--warnbg:#3a2f12;--bad:#f59b91;--badbg:#3b1d1a;color-scheme:dark}}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 var(--f);padding:max(14px,env(safe-area-inset-top)) max(14px,env(safe-area-inset-right)) max(30px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left))}
+.wrap{max-width:560px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
+.brand{display:flex;justify-content:space-between;align-items:center;color:var(--g);font-weight:800;font-size:17px}
+.brand small{color:var(--muted);font-weight:500;font-size:12.5px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:12px}
+h1{font-size:20px;margin:0;line-height:1.3}
+h2{font-size:17px;margin:4px 0 0}
+.muted{color:var(--muted);font-size:14.5px;margin:0}
+ol{margin:0;padding-left:22px}li{margin:7px 0}
+.box{background:var(--soft);border-radius:12px;padding:11px 13px;font-size:15px}
+.pk{background:var(--gs);border-radius:12px;padding:11px 13px;font-size:15px}
+label.f{display:flex;flex-direction:column;gap:5px;font-size:14px;color:var(--muted)}
+input,select{width:100%;border:1px solid var(--line);background:var(--card);color:var(--fg);border-radius:11px;padding:12px;font:16px var(--f)}
+input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid var(--g);outline-offset:2px}
+.btn{border:0;border-radius:13px;padding:14px;font:700 16px var(--f);cursor:pointer;background:var(--g);color:#fff;width:100%}
+.btn.ghost{background:var(--soft);color:var(--fg)}
+.btn.wa{background:#1fa855}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btns{display:flex;gap:8px}.btns .btn{flex:1}
+.chk{display:flex;gap:10px;align-items:flex-start;font-size:15px}
+.chk input{width:22px;height:22px;accent-color:var(--g);flex:none;margin-top:2px;padding:0}
+.pad{position:relative;border:1.5px dashed var(--g);border-radius:12px;background:#fff;height:190px;touch-action:none;-webkit-user-select:none;user-select:none}
+.pad canvas{width:100%;height:100%;display:block;border-radius:12px;touch-action:none}
+.pad .ph{position:absolute;inset:0;display:grid;place-items:center;color:#9aa49e;font-size:15px;pointer-events:none}
+.padbar{display:flex;justify-content:space-between;align-items:center;font-size:14px;color:var(--muted)}
+.link{border:0;background:none;color:var(--g);font:600 14px var(--f);text-decoration:underline;cursor:pointer;padding:0}
+.steps{display:flex;gap:6px}.steps span{flex:1;height:4px;border-radius:99px;background:var(--soft)}.steps span.on{background:var(--g)}
+.ok{background:var(--gs);color:var(--gd);border-radius:12px;padding:11px 13px;font-weight:600}
+.err{background:var(--badbg);color:var(--bad);border-radius:12px;padding:11px 13px;font-size:14.5px}
+.bubble{background:#d9fdd3;color:#111;border-radius:12px;padding:10px 12px;font-size:14.5px}
+.spin{display:inline-block;width:16px;height:16px;border:2.5px solid rgba(255,255,255,.5);border-top-color:#fff;border-radius:50%;animation:sp 1s linear infinite;vertical-align:-3px;margin-right:6px}
+@keyframes sp{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.spin{animation:none}}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand">PGNet Computer <small>Program SHARELINKGAN</small></div>
+  <div id="app"><div class="card"><p class="muted">Memuat…</p></div></div>
+</div>
+<script src="config.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+var API_URL=window.SLG_API||'';
+var WA_PGNET='6289605345210',KOTA='Citeureup',TTD_PGNET='Agda Purnama';
+var KLAUSUL=[
+ 'Saya mengetahui risikonya: barang komputer bekas rawan berasal dari pencurian, dan pembelinya bisa dimintai keterangan atau diperiksa oleh pihak berwajib.',
+ 'Tidak akan membeli barang yang patut diduga hasil pencurian, penggelapan, atau penipuan. Saya paham hal itu termasuk tindak pidana penadahan, walaupun dibeli lewat marketplace.',
+ 'Tidak melanjutkan pembelian dan melapor ke admin PGNet bila ada tanda mencurigakan: harga jauh di bawah pasaran, ada stiker inventaris/aset instansi, nomor seri dihapus, atau penjual tidak jelas asal barangnya.',
+ 'Setiap pembelian dicatat di aplikasi SHARELINKGAN dengan invoice/bukti yang benar, dan tidak melakukan COD atau ambil barang langsung tanpa izin.',
+ 'Segera melapor bila ada kecurigaan, dan bersedia memberi keterangan jujur bila ada pemeriksaan pihak berwajib.'];
+var KOMITMEN='Bila timbul masalah hukum dari pembelian yang dilakukan untuk PGNet, termasuk karena kesalahan pembelian, PGNet Computer akan mendampingi Karyawan dan menanggung 75% dari biaya yang timbul (biaya pendampingan hukum dan ganti rugi kepada pemilik barang). Sisanya 25% ditanggung Karyawan. Komitmen ini berlaku selama Karyawan jujur dan terbuka, dan tidak berlaku bila Karyawan terbukti sengaja bekerja sama dengan pelaku kejahatan.';
+var PERSETUJUAN='Saya, istri / orang tua Karyawan, sudah membaca surat ini, menyetujui Karyawan bekerja sebagai pencari barang bekas untuk PGNet, dan akan ikut mengingatkannya.';
+var BL=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+
+function $(id){return document.getElementById(id);}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+function LSget(k){try{return JSON.parse(localStorage.getItem(k)||'null');}catch(_){return null;}}
+function LSset(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(_){}}
+function dec(s){try{s=s.replace(/-/g,'+').replace(/_/g,'/');while(s.length%4)s+='=';return JSON.parse(decodeURIComponent(escape(atob(s))));}catch(_){return null;}}
+function stamp(d){d=d||new Date();var p=function(n){return ('0'+n).slice(-2);};return d.getDate()+' '+BL[d.getMonth()]+' '+d.getFullYear()+' '+p(d.getHours())+':'+p(d.getMinutes());}
+function waNum(s){s=String(s||'').replace(/[^\d]/g,'');if(s.indexOf('0')===0)s='62'+s.slice(1);return s;}
+
+/* ---------- data dari link ---------- */
+if(!/^https:\/\/script\.google\.com\//.test(API_URL)){$('app').innerHTML='<div class="card"><h1>Belum disetel</h1><p class="muted">Alamat server belum diisi di file config.js.</p></div>';throw new Error('config');}
+var AGNO=(location.search.match(/[?&]agda=(SP-SLG-\d{8}-[A-Z0-9]{4})/)||[])[1]||'';   // link TTD Agda
+var D=AGNO?null:dec((location.hash.match(/[#&]d=([^&]+)/)||[])[1]||'');
+if(!AGNO&&(!D||!D.n||!/^SP-SLG-\d{8}-[A-Z0-9]{4}$/.test(D.no||''))){
+  $('app').innerHTML='<div class="card"><h1>Link tidak lengkap</h1><p class="muted">Link surat ini rusak atau terpotong. Mohon minta link baru ke PGNet Computer.</p></div>';
+  throw new Error('link');
+}
+var KEY=D?'slg_'+D.no:'';
+var ST=(KEY&&LSget(KEY))||{step:0,nama:'',hub:'',hp:(D&&D.k)||'',sig:null,at:'',url:'',sent:false};
+function agdaLink(no){return location.href.replace(/[#?].*$/,'')+'?agda='+no;}
+function save(){LSset(KEY,ST);}
+
+/* ---------- layar ---------- */
+function render(){
+  var h;
+  if(ST.step===0){
+    h='<div class="card"><div class="steps"><span class="on"></span><span></span></div>'+
+     '<h1>Persetujuan keluarga</h1><p class="muted"><b style="color:var(--fg)">'+esc(D.n)+'</b> akan bekerja sebagai pencari barang komputer bekas untuk PGNet Computer. Mohon baca poin-poin di bawah, lalu isi data dan tanda tangan.</p>'+
+     '<p class="muted"><b style="color:var(--fg)">'+esc(D.n)+'</b>, sebagai pencari barang untuk PGNet Computer, menyatakan:</p>'+
+     '<ol>'+KLAUSUL.map(function(k){return '<li>'+esc(k)+'</li>';}).join('')+'</ol>'+
+     '<div class="box"><b>Komitmen PGNet Computer.</b> '+esc(KOMITMEN)+'</div>'+
+     '<div class="pk"><b>Persetujuan keluarga.</b> '+esc(PERSETUJUAN)+'</div>'+
+     '<h2>Data Anda</h2>'+
+     '<label class="f">Nama lengkap<input id="fNm" autocomplete="name" value="'+esc(ST.nama)+'"></label>'+
+     '<label class="f">Hubungan dengan '+esc(D.n)+'<select id="fHb"><option value="">— pilih —</option>'+['Istri','Ibu','Ayah','Orang tua / wali'].map(function(x){return '<option'+(ST.hub===x?' selected':'')+'>'+x+'</option>';}).join('')+'</select></label>'+
+     '<label class="f">No. HP / WhatsApp<input id="fHp" inputmode="tel" autocomplete="tel" value="'+esc(ST.hp)+'"></label>'+
+     '<div id="e0"></div><button type="button" class="btn" id="go1">Lanjut</button></div>';
+  }else if(ST.step===1){
+    h='<div class="card"><div class="steps"><span class="on"></span><span class="on"></span></div><h1>Tanda tangan</h1>'+
+     '<label class="chk"><input type="checkbox" id="fOk"><span>Saya, '+esc(ST.nama)+' ('+esc(ST.hub.toLowerCase())+'), sudah membaca surat ini, menyetujui '+esc(D.n)+' bekerja sebagai pencari barang bekas untuk PGNet, dan akan ikut mengingatkannya.</span></label>'+
+     '<div><div class="padbar"><span>Tanda tangan di kotak ini</span><button type="button" class="link" id="padX">Ulangi</button></div><div class="pad" id="pad"><canvas></canvas><div class="ph">✍️ Tanda tangan dengan jari</div></div></div>'+
+     '<div class="btns"><button type="button" class="btn ghost" id="back">Kembali</button><button type="button" class="btn" id="go2" disabled>Tanda tangan</button></div></div>';
+  }else{
+    var msg=pesan(true);
+    h='<div class="card"><div class="ok">✓ Terima kasih, '+esc(ST.nama)+'. Tanda tangan Anda sudah masuk ke surat.</div>'+
+     '<p class="muted">Ketuk <b>Selesai</b>, WhatsApp Anda akan terbuka ke PGNet. Tinggal ketuk kirim.</p>'+
+     '<div class="bubble">'+esc(msg).replace(/\n/g,'<br>')+'</div>'+
+     '<div id="e2"></div>'+
+     '<button type="button" class="btn wa" id="done">'+(ST.sent?'✓ Selesai — buka WA lagi':'Selesai')+'</button>'+
+     '<button type="button" class="btn ghost" id="share">Bagikan / simpan file PDF</button>'+
+     '<button type="button" class="link" id="redo" style="align-self:center">Ada yang salah? Ulangi tanda tangan</button></div>';
+  }
+  $('app').innerHTML=h;bind();window.scrollTo(0,0);
+}
+function pesan(pre){return 'Saya '+ST.nama+' ('+ST.hub.toLowerCase()+' '+D.n+') sudah tanda tangan Surat Pernyataan SHARELINKGAN.'+(ST.url?'\n\nPDF surat: '+ST.url:pre?'\n\nPDF surat: (link dibuat otomatis)':'')+'\n\nLink TTD Agda: '+agdaLink(D.no)+'\n\nNo. '+D.no;}
+function fileBase(){return D.n.replace(/[^A-Za-z0-9 ]/g,'').trim().replace(/\s+/g,'-')+'-'+D.no;}
+
+function bind(){
+  if($('go1'))$('go1').onclick=function(){
+    ST.nama=$('fNm').value.trim();ST.hub=$('fHb').value;ST.hp=$('fHp').value.trim();
+    if(!ST.nama||!ST.hub||ST.hp.replace(/[^\d]/g,'').length<9){$('e0').innerHTML='<div class="err">Lengkapi nama lengkap, hubungan, dan no. HP.</div>';return;}
+    ST.step=1;save();render();};
+  if($('pad')){
+    var P=pad($('pad'));
+    function upd(){$('go2').disabled=!(P.has()&&$('fOk').checked);}
+    $('pad').addEventListener('change',upd);$('fOk').onchange=upd;$('padX').onclick=P.clear;
+    $('back').onclick=function(){ST.step=0;save();render();};
+    $('go2').onclick=function(){ST.sig=P.data();ST.at=stamp();ST.url='';ST.sent=false;ST.step=2;save();render();};
+  }
+  if($('done'))$('done').onclick=selesai;
+  if($('share'))$('share').onclick=bagikan;
+  if($('redo'))$('redo').onclick=function(){ST.step=1;ST.sig=null;ST.url='';ST.sent=false;save();render();};
+}
+
+/* ---------- Selesai: simpan PDF ke Drive PGNet, lalu buka WA ke PGNet ---------- */
+var PDF_BLOB=null;
+function getPdf(){if(!PDF_BLOB)PDF_BLOB=buildPdf().output('blob');return PDF_BLOB;}
+function toB64(blob){return new Promise(function(ok,no){var r=new FileReader();r.onload=function(){ok(String(r.result).split(',')[1]);};r.onerror=no;r.readAsDataURL(blob);});}
+function bukaWA(){location.href='https://wa.me/'+WA_PGNET+'?text='+encodeURIComponent(pesan());}
+function selesai(){
+  var b=$('done');
+  if(ST.url){ST.sent=true;save();bukaWA();return;}
+  b.disabled=true;b.innerHTML='<span class="spin"></span>Menyiapkan surat…';
+  var blob;try{blob=getPdf();}catch(e){$('e2').innerHTML='<div class="err">Gagal membuat PDF. Muat ulang halaman lalu coba lagi.</div>';b.disabled=false;b.textContent='Selesai';return;}
+  toB64(blob).then(function(b64){
+    return fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},redirect:'follow',
+      body:JSON.stringify({fn:'uploadSurat',args:[{no:D.no,karyawan:D.n,keluarga:ST.nama,hub:ST.hub,at:ST.at},b64,{d:D,nama:ST.nama,hub:ST.hub,hp:ST.hp,at:ST.at,sig:ST.sig,sw:ST.sw,sh:ST.sh}]})}).then(function(r){return r.json();});
+  }).then(function(j){
+    if(!j.ok)throw new Error(j.error||'Gagal');
+    ST.url=j.result.url;ST.sent=true;save();bukaWA();
+    setTimeout(render,800);
+  }).catch(function(e){
+    // tanpa internet / server gagal: tetap buka WA ke PGNet, file dikirim lewat tombol Bagikan
+    b.disabled=false;b.textContent='Selesai';
+    $('e2').innerHTML='<div class="err">Surat belum terunggah ('+esc(e.message||e)+'). Ketuk <b>Bagikan / simpan file PDF</b>, pilih WhatsApp → PGNet, lalu kirim.</div>';
+  });
+}
+function bagikan(){
+  var blob;try{blob=getPdf();}catch(e){return;}
+  var name='Surat-SHARELINKGAN-'+fileBase()+'.pdf',file;
+  try{file=new File([blob],name,{type:'application/pdf'});}catch(_){}
+  if(file&&navigator.canShare&&navigator.canShare({files:[file]})){
+    navigator.share({files:[file],text:pesan()}).catch(function(){});return;
+  }
+  var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();
+  setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},2000);
+}
+
+/* ---------- pad tanda tangan (HP: sentuh; laptop: mouse) ---------- */
+function pad(wrap){
+  var c=wrap.querySelector('canvas'),ctx,drawing=false,has=false,last=null,ph=wrap.querySelector('.ph');
+  var r=c.getBoundingClientRect(),dpr=Math.max(2,window.devicePixelRatio||1);
+  c.width=r.width*dpr;c.height=r.height*dpr;ctx=c.getContext('2d');ctx.scale(dpr,dpr);ctx.lineWidth=2.6;ctx.lineCap='round';ctx.lineJoin='round';ctx.strokeStyle='#111';
+  function pt(e){var b=c.getBoundingClientRect(),t=e.touches?e.touches[0]:e;return {x:t.clientX-b.left,y:t.clientY-b.top};}
+  function start(e){e.preventDefault();drawing=true;last=pt(e);ctx.beginPath();ctx.arc(last.x,last.y,1.2,0,7);ctx.fillStyle='#111';ctx.fill();if(!has){has=true;ph.hidden=true;wrap.dispatchEvent(new Event('change'));}}
+  function move(e){if(!drawing)return;e.preventDefault();var p=pt(e);ctx.beginPath();ctx.moveTo(last.x,last.y);ctx.lineTo(p.x,p.y);ctx.stroke();last=p;}
+  function end(){drawing=false;}
+  c.addEventListener('touchstart',start,{passive:false});c.addEventListener('touchmove',move,{passive:false});c.addEventListener('touchend',end);c.addEventListener('touchcancel',end);
+  if(!('ontouchstart' in window)){c.addEventListener('pointerdown',start);c.addEventListener('pointermove',move);window.addEventListener('pointerup',end);}
+  return {has:function(){return has;},clear:function(){ctx.clearRect(0,0,c.width,c.height);has=false;ph.hidden=false;wrap.dispatchEvent(new Event('change'));},
+    data:function(){var o=trim(c);window._lastW=o.width;window._lastH=o.height;if(!AGNO){ST.sw=o.width;ST.sh=o.height;}return o.toDataURL('image/png');}};
+}
+// potong area kosong di sekitar tanda tangan
+function trim(c){
+  var x=c.getContext('2d'),w=c.width,h=c.height,d=x.getImageData(0,0,w,h).data,t=h,l=w,b=0,r=0;
+  for(var y=0;y<h;y++)for(var i=0;i<w;i++){if(d[(y*w+i)*4+3]>10){if(y<t)t=y;if(y>b)b=y;if(i<l)l=i;if(i>r)r=i;}}
+  if(r<=l||b<=t)return c;
+  var m=8,o=document.createElement('canvas');o.width=r-l+2*m;o.height=b-t+2*m;o.getContext('2d').drawImage(c,l-m,t-m,o.width,o.height,0,0,o.width,o.height);
+  return o;
+}
+
+/* ---------- PDF A4 (kop surat lengkap, desain hijau PGNet) ---------- */
+var LOGO='data:image/jpeg;base64,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';
+var HJ=[46,139,58],HJT=[22,101,52],HJM=[234,245,232],TX=[34,34,34],AB=[110,110,110],GR=[178,214,178];
+function buildPdf(A){
+  var J=window.jspdf.jsPDF,doc=new J({unit:'mm',format:'a4'}),L=16,R=194,W=R-L,y=14,FS=10.4,LH=5.3;
+  function col(c){doc.setTextColor(c[0],c[1],c[2]);}
+  function f(b,sz){doc.setFont('helvetica',b?'bold':'normal');if(sz)doc.setFontSize(sz);}
+  // teks campuran (tebal / hijau) dengan pindah baris otomatis
+  function rich(segs,x,yy,maxW){
+    var words=[];segs.forEach(function(sg){String(sg.t).split(/(\s+)/).forEach(function(w){if(w)words.push({t:w,b:sg.b,c:sg.c});});});
+    var lines=[[]],lw=0;
+    words.forEach(function(w){f(w.b);var ww=doc.getTextWidth(w.t),cur=lines[lines.length-1];
+      if(/^\s+$/.test(w.t)){if(cur.length){cur.push({t:' ',b:w.b,c:w.c});lw+=doc.getTextWidth(' ');}return;}
+      if(lw+ww>maxW&&cur.length){while(cur.length&&cur[cur.length-1].t===' ')cur.pop();lines.push([]);lw=0;cur=lines[lines.length-1];}
+      cur.push(w);lw+=ww;});
+    lines.forEach(function(ln,k){var cx=x;ln.forEach(function(w){f(w.b);col(w.c||TX);doc.text(w.t,cx,yy+k*LH);cx+=doc.getTextWidth(w.t);});});
+    f(false);col(TX);return yy+lines.length*LH;
+  }
+  function isian(list){list.forEach(function(r){f(false,FS);col(TX);doc.text(r[0],L,y);doc.text(':',L+64,y);
+    doc.setDrawColor(GR[0],GR[1],GR[2]);doc.setLineWidth(.25);doc.setLineDashPattern([.4,.6],0);doc.line(L+69,y+1.6,R,y+1.6);doc.setLineDashPattern([],0);
+    if(r[1]){var t=doc.splitTextToSize(String(r[1]),R-L-71);doc.text(t[0],L+70,y);} y+=LH+0.6;});}
+  // kop
+  doc.addImage(LOGO,'JPEG',L,y-4,13,13);
+  f(true,15.5);col(HJ);doc.text('PGNet Computer',L+16,y+4.3);
+  f(false,8.4);col(AB);doc.text('Jl. Mayor Oking, Kp. Zagal No. 159, Citeureup, Kab. Bogor 16810',R,y,{align:'right'});doc.text('WhatsApp 0896-0534-5210',R,y+4.2,{align:'right'});
+  y+=11;doc.setDrawColor(HJ[0],HJ[1],HJ[2]);doc.setLineWidth(.7);doc.line(L,y,R,y);y+=9;
+  f(true,13.2);col(HJ);doc.setCharSpace(.25);doc.text('SURAT PERNYATAAN & PERSETUJUAN KELUARGA',105,y,{align:'center'});doc.setCharSpace(0);y+=5.2;
+  f(false,9.2);col(AB);doc.text('Karyawan Pencari Barang Program SHARELINKGAN',105,y,{align:'center'});y+=8;
+  f(false,FS);col(TX);doc.text('Yang bertanda tangan di bawah ini:',L,y);y+=LH+1.6;
+  isian([['Nama lengkap',D.n],['Alamat',D.a||''],['No. HP / WhatsApp',D.h||'']]);
+  y+=.6;doc.text('sebagai pencari barang untuk PGNet Computer, dengan ini menyatakan:',L,y);y+=LH+.8;
+  var POIN=[
+    [{t:'Saya '},{t:'mengetahui risikonya',b:1},{t:': barang komputer bekas rawan berasal dari pencurian, dan pembelinya bisa dimintai keterangan atau diperiksa oleh pihak berwajib.'}],
+    [{t:'Tidak akan membeli barang yang patut diduga hasil pencurian, penggelapan, atau penipuan. Saya paham hal itu termasuk tindak pidana '},{t:'penadahan',b:1},{t:', walaupun dibeli lewat marketplace.'}],
+    [{t:KLAUSUL[2]}],[{t:KLAUSUL[3]}],[{t:KLAUSUL[4]}]];
+  POIN.forEach(function(p,i){doc.setFillColor(HJ[0],HJ[1],HJ[2]);doc.circle(L+2,y-1.35,2,'F');f(true,7.2);doc.setTextColor(255,255,255);doc.text(String(i+1),L+2,y-.3,{align:'center'});
+    f(false,FS);y=rich(p,L+6,y,W-6)+1.2;});
+  // kotak komitmen
+  y+=1.5;f(false,FS);
+  var seg=[{t:'Komitmen PGNet Computer.',b:1,c:HJ},{t:' Bila timbul masalah hukum dari pembelian yang dilakukan untuk PGNet, termasuk karena kesalahan pembelian, PGNet Computer akan mendampingi Karyawan dan '},{t:'menanggung 75%',b:1},{t:' dari biaya yang timbul (biaya pendampingan hukum dan ganti rugi kepada pemilik barang). Sisanya 25% ditanggung Karyawan. Komitmen ini berlaku selama Karyawan jujur dan terbuka, dan tidak berlaku bila Karyawan terbukti sengaja bekerja sama dengan pelaku kejahatan.'}];
+  // ukur dulu jumlah baris (gambar di luar halaman), lalu gambar kotak + teks
+  var probe=new J({unit:'mm',format:'a4'});var keep=doc;doc=probe;doc.setFontSize(FS);var nl=Math.round((rich(seg,0,0,W-10))/LH);doc=keep;
+  var bh=nl*LH+4.2;doc.setFillColor(HJM[0],HJM[1],HJM[2]);doc.rect(L,y-4.6,W,bh,'F');doc.setFillColor(HJ[0],HJ[1],HJ[2]);doc.rect(L,y-4.6,1.1,bh,'F');
+  f(false,FS);y=rich(seg,L+5,y,W-10)+3.8;
+  y=rich([{t:'Persetujuan keluarga.',b:1,c:HJ},{t:' '+PERSETUJUAN}],L,y,W)+2.4;
+  isian([['Nama lengkap',ST.nama],['Hubungan (istri / orang tua)',ST.hub],['No. HP / WhatsApp',ST.hp]]);
+  y+=2;f(false,FS);col(TX);doc.text(KOTA+', .................................... 20.....',R,y,{align:'right'});y+=8;
+  var cw=W/3,cols=['Karyawan','Istri / Orang Tua','PGNet Computer'],names=[D.n,ST.nama,TTD_PGNET];
+  f(true,FS);col(HJ);cols.forEach(function(t,i){doc.text(t,L+cw*i+cw/2,y,{align:'center'});});
+  var sy=y+3,sh=22;
+  doc.setDrawColor(GR[0],GR[1],GR[2]);doc.setLineWidth(.3);doc.setLineDashPattern([.8,.8],0);doc.rect(L+cw/2-9,sy+1,18,13);doc.setLineDashPattern([],0);
+  f(false,7.6);col(AB);doc.text(['Materai','Rp10.000'],L+cw/2,sy+6.5,{align:'center'});
+  if(ST.sig){var iw=ST.sw||300,ih=ST.sh||100,mw=cw-12,mh=sh-1,sc=Math.min(mw/iw,mh/ih),dw=iw*sc,dh=ih*sc;doc.addImage(ST.sig,'PNG',L+cw+cw/2-dw/2,sy+(sh-dh)/2,dw,dh);}
+  if(A&&A.sig){var aw=A.sw||300,ah=A.sh||100,sa=Math.min((cw-12)/aw,(sh-1)/ah);doc.addImage(A.sig,'PNG',L+2*cw+cw/2-aw*sa/2,sy+(sh-ah*sa)/2,aw*sa,ah*sa);}
+  y=sy+sh+1.5;doc.setDrawColor(HJ[0],HJ[1],HJ[2]);doc.setLineWidth(.35);
+  cols.forEach(function(t,i){var cx=L+cw*i;doc.line(cx+3,y,cx+cw-3,y);f(false,FS);col(TX);doc.text(names[i],cx+cw/2,y+5,{align:'center',maxWidth:cw-4});});
+  y+=10;doc.setDrawColor(GR[0],GR[1],GR[2]);doc.setLineWidth(.3);doc.line(L,y,R,y);y+=4.2;
+  f(false,8.2);col(AB);doc.text('Dibuat rangkap 2: untuk PGNet dan untuk Karyawan.',105,y,{align:'center'});y+=6;
+  f(false,7);doc.text(doc.splitTextToSize('No. '+D.no+'  |  Tanda tangan elektronik Istri / Orang Tua: '+ST.nama+' ('+ST.hub+'), HP '+ST.hp+', '+ST.at+' WIB, dari link yang dikirim PGNet ke WA '+(D.k||'-')+'.  |  '+(A&&A.sig?'Tanda tangan elektronik PGNet Computer: '+TTD_PGNET+', '+A.at+' WIB.  |  Karyawan menandatangani di kertas setelah surat dicetak, di atas meterai Rp10.000.':'Karyawan & PGNet Computer menandatangani di kertas setelah surat dicetak (Karyawan di atas meterai Rp10.000).'),W),L,y);
+  col(TX);
+  doc.setProperties({title:'Surat Pernyataan SHARELINKGAN - '+D.n,subject:D.no,creator:'PGNet Computer'});
+  return doc;
+}
+
+/* ======================= TTD AGDA (PGNet) dari jarak jauh ======================= */
+var AG={pin:'',sig:null,sw:0,sh:0,at:'',url:'',blob:null};
+function api(fn,args){return fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},redirect:'follow',body:JSON.stringify({fn:fn,args:args})})
+  .then(function(r){return r.json();},function(){throw new Error('Tidak ada koneksi. Cek internet lalu coba lagi.');}).then(function(j){if(!j.ok)throw new Error(j.error||'Gagal');return j.result;});}
+function agdaPin(){try{return localStorage.getItem('slg_agda_pin')||'';}catch(_){return '';}}
+function card(h){$('app').innerHTML='<div class="card">'+h+'</div>';window.scrollTo(0,0);}
+function agdaLogin(msg){
+  card('<h1>Tanda tangan PGNet</h1><p class="muted">Surat '+esc(AGNO)+'. Masuk dengan password Agda.</p>'+
+    (msg?'<div class="err">'+esc(msg)+'</div>':'')+'<label class="f">Password Agda<input id="agPw" type="password" autocomplete="current-password"></label><button type="button" class="btn" id="agIn">Masuk</button>');
+  $('agIn').onclick=function(){var v=$('agPw').value.trim();if(!v)return;AG.pin=v;agdaLoad();};
+  $('agPw').onkeydown=function(e){if(e.key==='Enter')$('agIn').click();};
+}
+function agdaLoad(){
+  card('<p class="muted">Memuat surat…</p>');
+  api('getSurat',[AG.pin,AGNO]).then(function(d){
+    try{localStorage.setItem('slg_agda_pin',AG.pin);}catch(_){}
+    D=d.d;ST=d.kel;
+    if(d.agda&&d.agda.url){AG.url=d.agda.url;AG.at=d.agda.at;agdaDone();}else agdaSign();
+  },function(e){
+    if(/password/i.test(e.message)){try{localStorage.removeItem('slg_agda_pin');}catch(_){}agdaLogin(e.message);}
+    else{try{localStorage.setItem('slg_agda_pin',AG.pin);}catch(_){}card('<h1>Belum bisa dibuka</h1><div class="err">'+esc(e.message)+'</div><button type="button" class="btn" onclick="agdaLoad()">Coba lagi</button>');}
+  });
+}
+function agdaSign(){
+  var simpan=LSget('slg_agda_sig');
+  card('<h1>Tanda tangan PGNet</h1>'+
+    '<div class="box"><b>'+esc(D.n)+'</b> · karyawan pencari barang<br><span class="muted">'+esc(AGNO)+'</span></div>'+
+    '<div class="ok">✓ '+esc(ST.nama)+' ('+esc(String(ST.hub).toLowerCase())+') sudah tanda tangan · '+esc(ST.at)+'</div>'+
+    '<div style="background:#fff;border:1px solid var(--line);border-radius:12px;padding:8px;text-align:center"><img src="'+ST.sig+'" alt="Tanda tangan istri / orang tua" style="max-height:70px;max-width:100%"></div>'+
+    '<label class="chk"><input type="checkbox" id="agOk"><span>Saya, '+esc(TTD_PGNET)+', menandatangani surat ini atas nama PGNet Computer.</span></label>'+
+    (simpan?'<div id="agSaved"><div class="padbar"><span>Tanda tangan tersimpan</span><button type="button" class="link" id="agNew">Gambar ulang</button></div><div style="background:#fff;border:1.5px solid var(--g);border-radius:12px;padding:10px;text-align:center"><img src="'+simpan.sig+'" alt="Tanda tangan Agda" style="max-height:80px;max-width:100%"></div></div>':'')+
+    '<div id="agPadW"'+(simpan?' hidden':'')+'><div class="padbar"><span>Tanda tangan di kotak ini</span><button type="button" class="link" id="padX">Ulangi</button></div><div class="pad" id="pad"><canvas></canvas><div class="ph">✍️ Tanda tangan dengan jari</div></div></div>'+
+    '<div id="e3"></div><button type="button" class="btn" id="agGo" disabled>Tanda tangan &amp; Selesai</button>');
+  var P=null,pakai=!!simpan;
+  function upd(){$('agGo').disabled=!($('agOk').checked&&(pakai||(P&&P.has())));}
+  function bukaPad(){$('agPadW').hidden=false;if(!P){P=pad($('pad'));$('pad').addEventListener('change',upd);$('padX').onclick=P.clear;}}
+  if(!simpan)bukaPad();
+  if($('agNew'))$('agNew').onclick=function(){pakai=false;$('agSaved').hidden=true;bukaPad();upd();};
+  $('agOk').onchange=upd;
+  $('agGo').onclick=function(){
+    var b=this;b.disabled=true;b.innerHTML='<span class="spin"></span>Menyimpan…';
+    if(pakai){AG.sig=simpan.sig;AG.sw=simpan.sw;AG.sh=simpan.sh;}else{AG.sig=P.data();AG.sw=window._lastW;AG.sh=window._lastH;}
+    AG.at=stamp();
+    var blob;try{blob=buildPdf(AG).output('blob');}catch(e){$('e3').innerHTML='<div class="err">Gagal membuat PDF.</div>';b.disabled=false;b.textContent='Tanda tangan & Selesai';return;}
+    AG.blob=blob;
+    toB64(blob).then(function(b64){return api('ttdAgda',[AG.pin,AGNO,{sig:AG.sig,sw:AG.sw,sh:AG.sh,at:AG.at},b64]);}).then(function(r){
+      AG.url=r.url;LSset('slg_agda_sig',{sig:AG.sig,sw:AG.sw,sh:AG.sh});agdaDone();
+    },function(e){$('e3').innerHTML='<div class="err">'+esc(e.message)+'</div>';b.disabled=false;b.textContent='Tanda tangan & Selesai';});
+  };
+}
+function agdaDone(){
+  var txt='Surat Pernyataan SHARELINKGAN '+D.n+' sudah ditandatangani '+TTD_PGNET+' (PGNet). Siap dicetak, lalu karyawan tanda tangan di atas meterai.\n\nPDF lengkap: '+AG.url+'\n\nNo. '+AGNO;
+  card('<div class="ok">✓ Surat '+esc(D.n)+' sudah ditandatangani PGNet'+(AG.at?' · '+esc(AG.at):'')+'</div>'+
+    '<p class="muted">Langkah terakhir: cetak PDF lengkap, lalu karyawan tanda tangan di atas meterai Rp10.000 (rangkap 2).</p>'+
+    '<a class="btn" style="display:block;text-align:center;text-decoration:none" href="'+esc(AG.url)+'" target="_blank" rel="noopener">Buka PDF lengkap</a>'+
+    '<button type="button" class="btn wa" id="agWa">Kirim ke WA PGNet</button>'+
+    (AG.blob?'<button type="button" class="btn ghost" id="agShare">Bagikan / simpan file PDF</button>':''));
+  $('agWa').onclick=function(){location.href='https://wa.me/'+WA_PGNET+'?text='+encodeURIComponent(txt);};
+  if($('agShare'))$('agShare').onclick=function(){var name='Surat-SHARELINKGAN-'+fileBase()+'-LENGKAP.pdf',file;try{file=new File([AG.blob],name,{type:'application/pdf'});}catch(_){}
+    if(file&&navigator.canShare&&navigator.canShare({files:[file]})){navigator.share({files:[file]}).catch(function(){});return;}
+    var a=document.createElement('a');a.href=URL.createObjectURL(AG.blob);a.download=name;document.body.appendChild(a);a.click();setTimeout(function(){a.remove();},2000);};
+}
+
+if(AGNO){AG.pin=agdaPin();if(AG.pin)agdaLoad();else agdaLogin();}
+else{
+  if(ST.step===1&&!ST.nama)ST.step=0;
+  if(ST.step===2&&!ST.sig)ST.step=1;
+  render();
+}
+</script>
+</body>
+</html>
